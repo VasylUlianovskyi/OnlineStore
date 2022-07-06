@@ -19,7 +19,7 @@ export default class OnlineStorePage {
     this.initComponents();
     this.render();
     this.renderComponents();
-
+    this.filtersPanel = ''
     this.initEventListeners();
 
     this.update(1);
@@ -28,7 +28,7 @@ export default class OnlineStorePage {
   async loadData (pageNumber) {
     this.url.searchParams.set('_page', pageNumber);
 
-    const response = await fetch(this.url);
+    const response = await fetch(this.url + this.filtersPanel);
     const products = await response.json();
 
       console.log('products', products);
@@ -123,8 +123,18 @@ export default class OnlineStorePage {
 
       this.update('q', searchQuery)
     })
+
+    this.components.sidebar.element.addEventListener('filters-changed', event => {
+      const filtersArr = event.detail
+
+
+      this.filtersPanel = filtersArr.length ? '&' + filtersArr.join('&') : ''
+
+      this.update('q')
+    })
   }
 
+  
 
   async update (pageNumber) {
 

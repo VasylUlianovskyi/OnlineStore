@@ -8,7 +8,7 @@ export default class Header {
     getTemplate() {
       return `
       <header class="os-header">
-        <span class="os-logo-text">Online Store</span>
+        <span class="os-logo-text">Online Storerererer</span>
         <button class="cart os-btn-primary" data-element="cartBtn">
           <i class="bi bi-cart">
             CART
