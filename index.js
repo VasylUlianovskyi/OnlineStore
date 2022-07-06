@@ -8,32 +8,53 @@ const BACKEND_URL = 'https://online-store.bootcamp.place/api/'
 
 export default class OnlineStorePage {
   constructor () {
-    this.pageSize = 9;
     this.products = [];
 
     this.url = new URL('products', BACKEND_URL);
-    this.url.searchParams.set('_limit', this.pageSize);
+
+
+    this.totalElements = 100
 
     this.components = {};
+    this.filtersPanel = ''
+    this.filters = {
+      _page: 1,
+      _limit: 9,
+      _q: ''
+    }
 
     this.initComponents();
     this.render();
     this.renderComponents();
-    this.filtersPanel = ''
+
     this.initEventListeners();
 
-    this.update(1);
+    this.update('_page', 1);
   }
 
-  async loadData (pageNumber) {
-    this.url.searchParams.set('_page', pageNumber);
+  async loadData () {
+    for (const key in this.filters) {
+      if (this.filters[key]) {
+        this.url.searchParams.set(key, this.filters[key])
+      } else {
+        this.url.searchParams.delete(key, this.filters[key])
+      }
+    }
+
+
+    console.log('page', this.filters._page)
 
     const response = await fetch(this.url + this.filtersPanel);
+
+    this.totalElements = Number(response.headers.get('X-Total-Count'));
+    const totalPages = Math.ceil(this.totalElements / this.filters._limit);
+
+
     const products = await response.json();
 
       console.log('products', products);
 
-      return products;
+      return { products, totalPages };
     }
 
 
@@ -42,7 +63,9 @@ export default class OnlineStorePage {
   getTemplate () {
     return `
       <div class="os-container">
-      <div class="header"></div>
+      <div class="header">
+
+      </div>
         <main class="os-products">
           <div data-element="sidebar">
             <!-- Side Bar Component -->
@@ -64,23 +87,24 @@ export default class OnlineStorePage {
   }
 
   initComponents () {
-    const totalElements = 100;
-    const totalPages = Math.ceil(totalElements / this.pageSize);
+    const totalPages = Math.ceil(this.totalElements / this.filters._limit);
 
     const header = new Header();
     const search = new Search();
     const sidebar = new SideBar();
-    const cardList = new CardsList(this.products.slice(0, this.pageSize));
+    const cardList = new CardsList(this.products);
     const pagination = new Pagination({
       activePageIndex: 0,
       totalPages
     });
+
 
     this.components.header = header;
     this.components.sidebar = sidebar;
     this.components.search = search;
     this.components.cardList = cardList;
     this.components.pagination = pagination;
+
 
 
   }
@@ -100,7 +124,6 @@ export default class OnlineStorePage {
     cardsContainer.append(this.components.cardList.element);
     paginationContainer.append(this.components.pagination.element);
 
-
   }
 
   render () {
@@ -113,9 +136,9 @@ export default class OnlineStorePage {
 
   initEventListeners () {
     this.components.pagination.element.addEventListener('page-changed', event => {
-      const pageIndex = event.detail;
+      const pageIndex =  Number(event.detail);
 
-      this.update(pageIndex + 1);
+      this.update('_page', pageIndex + 1);
     });
 
     this.components.search.element.addEventListener('search-changed', event => {
@@ -132,18 +155,30 @@ export default class OnlineStorePage {
 
       this.update('q')
     })
+
   }
 
-  
 
-  async update (pageNumber) {
+  async update (filterName, filterValue) {
+    if (filterName && (typeof filterValue === 'number' || typeof filterValue === 'string')) {
+      this.filters[filterName] = filterValue
+    }
+
+    if (filterName === 'q') {
+      this.filters._page = 1
+    }
+
+    const { products, totalPages } = await this.loadData();
+
+    if (filterName === '_page') {
+      this.components.cardList.update(products);
+    }
+
+    if (filterName === 'q') {
+      this.components.pagination.update(totalPages);
+      this.components.cardList.update(products);
+    }
 
 
-
-    const data = await this.loadData(pageNumber);
-
-    this.components.cardList.update(data);
   }
-
 }
-

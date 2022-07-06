@@ -46,7 +46,7 @@ export default class SideBar  {
 
   renderPriceFilter () {
     const payload = {
-      filterName: 'Price',
+      filterName: 'price',
       min: 0,
       max: 85000
     }
@@ -76,7 +76,7 @@ export default class SideBar  {
 
   renderRatingFilter () {
     const payload = {
-      filterName: 'Rating',
+      filterName: 'rating',
       min: 0,
       max: 5,
       precision: 2
