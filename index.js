@@ -40,24 +40,16 @@ export default class OnlineStorePage {
       }
     }
 
-
-    console.log('page', this.filters._page)
-
     const response = await fetch(this.url + this.filtersPanel);
 
     this.totalElements = Number(response.headers.get('X-Total-Count'));
     const totalPages = Math.ceil(this.totalElements / this.filters._limit);
 
-
     const products = await response.json();
 
-      console.log('products', products);
 
       return { products, totalPages };
     }
-
-
-
 
   getTemplate () {
     return `

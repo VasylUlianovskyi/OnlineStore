@@ -57,7 +57,7 @@ export default class SideBar  {
 
 
   renderCategoriesFilter () {
-    console.log('this.categoriesFilterData', this.categoriesFilterData)
+
     if (this.categoriesFilterData && this.categoriesFilterData.length) {
       this.components.categoryFilter = new Filters({ name: 'category', data: this.categoriesFilterData })
       const container = this.element.querySelector('[data-element="filters"]')
@@ -66,7 +66,6 @@ export default class SideBar  {
   }
 
   renderBrandsFilter () {
-    console.log('this.brandsFilterData', this.brandsFilterData)
     if (this.brandsFilterData && this.brandsFilterData.length) {
       this.components.brandsFilter = new Filters({ name: 'brand', data: this.brandsFilterData })
       const container = this.element.querySelector('[data-element="filters"]')
