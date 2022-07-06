@@ -1,4 +1,3 @@
-import Header from './Components/Header/header.js';
 import SideBar from './Components/SideBar/side-bar.js';
 import Search from './Components/SearchBox/search-box.js';
 import CardsList from './Components/Cards-list/cards-list.js';
@@ -63,9 +62,12 @@ export default class OnlineStorePage {
   getTemplate () {
     return `
       <div class="os-container">
-      <div class="header">
-
-      </div>
+        <header class="os-header">
+          <span class="os-logo-text">Online Store</span>
+          <button class="cart os-btn-primary" data-element="cartBtn">
+            <i class="bi bi-cart">CART</i>
+          </button>
+        </header>
         <main class="os-products">
           <div data-element="sidebar">
             <!-- Side Bar Component -->
@@ -89,7 +91,7 @@ export default class OnlineStorePage {
   initComponents () {
     const totalPages = Math.ceil(this.totalElements / this.filters._limit);
 
-    const header = new Header();
+ 
     const search = new Search();
     const sidebar = new SideBar();
     const cardList = new CardsList(this.products);
@@ -99,7 +101,7 @@ export default class OnlineStorePage {
     });
 
 
-    this.components.header = header;
+ 
     this.components.sidebar = sidebar;
     this.components.search = search;
     this.components.cardList = cardList;
@@ -110,7 +112,7 @@ export default class OnlineStorePage {
   }
 
   renderComponents () {
-    const headerContainer = this.element.querySelector('[class="header"]');
+
     const sidebarContainer = this.element.querySelector('[data-element="sidebar"]');
 
     const searchContainer = this.element.querySelector('[data-element="search"]');
@@ -118,7 +120,6 @@ export default class OnlineStorePage {
     const paginationContainer = this.element.querySelector('[data-element="pagination"]');
 
 
-    headerContainer.append(this.components.header.element);
     sidebarContainer.append(this.components.sidebar.element);
     searchContainer.append(this.components.search.element);
     cardsContainer.append(this.components.cardList.element);
@@ -156,6 +157,11 @@ export default class OnlineStorePage {
       this.update('q')
     })
 
+    this.components.sidebar.element.addEventListener('filters-reset', event => {
+      this.filtersPanel = ''
+      this.filters.q = ''
+      this.update('q')
+    })
   }
 
 
