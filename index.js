@@ -10,12 +10,9 @@ const BACKEND_URL = 'https://online-store.bootcamp.place/api/'
 export default class OnlineStorePage {
   constructor () {
     this.products = [];
-
     this.url = new URL('products', BACKEND_URL);
-
-
     this.totalElements = 100
-
+    this.cartProducts = [];
     this.components = {};
     this.filtersPanel = ''
     this.filters = {
