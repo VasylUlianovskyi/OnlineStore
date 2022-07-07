@@ -42,7 +42,7 @@ export default class Cart {
           <div class="item-counter">
             <button class="count-btn" data-control="decrementQuantity" data-id="${item.id}">-</button>
             <span>${item.quantity}</span>
-            <button class="counter-btn" data-control="incrementQuantity" data-id="${item.id}">+</button>
+            <button class="count-btn" data-control="incrementQuantity" data-id="${item.id}">+</button>
           </div>
           <div class="product__price">${item.price}</div>
         </li>
